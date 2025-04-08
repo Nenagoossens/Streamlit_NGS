@@ -5,8 +5,8 @@ import matplotlib.pyplot as plt
 # Laad de CSV-bestand
 df = pd.read_csv('exclusieve_schoenen_verkoop_met_locatie.csv')
 
-# Veronderstel dat er een 'verkoop_datum' en 'land' kolom zijn in de dataset.
-df['verkoop_datum'] = pd.to_datetime(df['verkoop_datum'])
+# Verander de kolomnaam 'verkoop_datum' naar 'aankoopdatum'
+df['aankoopdatum'] = pd.to_datetime(df['aankoopdatum'])
 
 # Maak de tabs
 tab1, tab2 = st.tabs(["Verkopen per Maand", "Verkopen per Land"])
@@ -14,7 +14,7 @@ tab1, tab2 = st.tabs(["Verkopen per Maand", "Verkopen per Land"])
 # Tab 1 - Verkopen per maand
 with tab1:
     # Groepeer de data per maand
-    df['maand'] = df['verkoop_datum'].dt.to_period('M')
+    df['maand'] = df['aankoopdatum'].dt.to_period('M')
     maand_verkopen = df.groupby('maand')['verkoop_bedrag'].sum()
 
     # Plot de maandelijkse verkopen
@@ -39,3 +39,4 @@ with tab2:
     plt.ylabel('Verkoopbedrag (€)')
     plt.xticks(rotation=45)
     st.pyplot(plt)
+
