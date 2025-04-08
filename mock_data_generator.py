@@ -1,53 +1,41 @@
 import streamlit as st
 import pandas as pd
-import matplotlib as mpl
-'''
-# Lees de CSV
+import matplotlib.pyplot as plt
+
+# Laad de CSV-bestand
 df = pd.read_csv('exclusieve_schoenen_verkoop_met_locatie.csv')
 
-# Zorg ervoor dat de datumkolom als datetime wordt gelezen
-df['datum'] = pd.to_datetime(df['datum'])
+# Veronderstel dat er een 'verkoop_datum' en 'land' kolom zijn in de dataset.
+df['verkoop_datum'] = pd.to_datetime(df['verkoop_datum'])
 
-# Voeg een kolom toe voor de maand en het jaar
-df['maand'] = df['datum'].dt.to_period('M')
+# Maak de tabs
+tab1, tab2 = st.tabs(["Verkopen per Maand", "Verkopen per Land"])
 
-# Initialiseer de Dash-app
-app = dash.Dash(__name__)
+# Tab 1 - Verkopen per maand
+with tab1:
+    # Groepeer de data per maand
+    df['maand'] = df['verkoop_datum'].dt.to_period('M')
+    maand_verkopen = df.groupby('maand')['verkoop_bedrag'].sum()
 
-# Layout van de app
-app.layout = html.Div([
-    dcc.Tabs([
-        dcc.Tab(label='Verkoop per maand', children=[
-            dcc.Graph(id='verkoop-per-maand')
-        ]),
-        dcc.Tab(label='Verkoop per land', children=[
-            dcc.Graph(id='verkoop-per-land')
-        ])
-    ])
-])
+    # Plot de maandelijkse verkopen
+    plt.figure(figsize=(10, 6))
+    maand_verkopen.plot(kind='bar', color='skyblue')
+    plt.title('Verkopen per Maand')
+    plt.xlabel('Maand')
+    plt.ylabel('Verkoopbedrag (€)')
+    plt.xticks(rotation=45)
+    st.pyplot(plt)
 
-# Callback voor de eerste visualisatie (verkoop per maand)
-@app.callback(
-    Output('verkoop-per-maand', 'figure'),
-    Input('verkoop-per-maand', 'id')
-)
-def update_verkoop_per_maand(_):
-    verkoop_per_maand = df.groupby('maand').size().reset_index(name='aantal')
-    fig = px.line(verkoop_per_maand, x='maand', y='aantal', title='Verkoop per maand')
-    return fig
+# Tab 2 - Verkopen per land
+with tab2:
+    # Groepeer de data per land
+    land_verkopen = df.groupby('land')['verkoop_bedrag'].sum()
 
-# Callback voor de tweede visualisatie (verkoop per land)
-@app.callback(
-    Output('verkoop-per-land', 'figure'),
-    Input('verkoop-per-land', 'id')
-)
-def update_verkoop_per_land(_):
-    verkoop_per_land = df['land'].value_counts().reset_index()
-    verkoop_per_land.columns = ['land', 'aantal']
-    fig = px.bar(verkoop_per_land, x='land', y='aantal', title='Verkoop per land')
-    return fig
-
-# Run de app
-if __name__ == '__main__':
-    app.run_server(debug=True)
-'''
+    # Plot de verkopen per land
+    plt.figure(figsize=(10, 6))
+    land_verkopen.plot(kind='bar', color='green')
+    plt.title('Verkopen per Land')
+    plt.xlabel('Land')
+    plt.ylabel('Verkoopbedrag (€)')
+    plt.xticks(rotation=45)
+    st.pyplot(plt)
