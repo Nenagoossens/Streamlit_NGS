@@ -8,11 +8,11 @@ df = pd.read_csv('exclusieve_schoenen_verkoop_met_locatie.csv')
 # Verander de kolomnaam 'verkoop_datum' naar 'aankoopdatum'
 df['aankoopdatum'] = pd.to_datetime(df['aankoopdatum'])
 
-# Maak de tabs
-tab1, tab2, tab3 = st.tabs(["Verkopen per Maand", "Verkopen per Land", "Wijzig Data"])
-
 # Titel toevoegen
 st.title("Exclusieve Schoenen Verkoop met Locatie")
+
+# Maak de tabs
+tab1, tab2, tab3 = st.tabs(["Verkopen per Maand", "Verkopen per Land", "Wijzig Data"])
 
 # Tab 1 - Verkopen per maand
 with tab1:
