@@ -1,35 +1,32 @@
 import streamlit as st
 import pandas as pd
-import matplotlib.pyplot as plt
-import seaborn as sns
-
-# Pagina-instellingen (optioneel)
-st.set_page_config(page_title="Schoenen Verkoop Dashboard", layout="centered")
+import plotly.express as px
 
 # Titel
 st.title("Exclusieve Schoenen Verkoop Dashboard")
 
-# CSV inladen
+# Data inladen
 df = pd.read_csv("exclusieve_schoenen_verkoop_met_locatie.csv")
 
-# Toon de data in de app (optioneel)
-st.subheader("Data Voorbeeld")
+# Toon een stukje van de data
+st.subheader("Voorbeeld van de data")
 st.dataframe(df.head())
 
-# Eerste visual: Verkoop per merk
-st.subheader("Visual 1: Totale Verkoop per Merk")
-if 'merk' in df.columns and 'verkoop' in df.columns:
-    verkoop_per_merk = df.groupby('verk')['verkoop'].sum().reset_index()
-    fig1, ax1 = plt.subplots()
-    sns.barplot(data=verkoop_per_merk, x='merk', y='verkoop', ax=ax1)
-    ax1.set_xticklabels(ax1.get_xticklabels(), rotation=45)
-    st.pyplot(fig1)
-else:
-    st.warning("Kolommen 'merk' en/of 'verkoop' niet gevonden in je data.")
+# Visual 1: Top 10 best verkochte schoenen
+st.subheader("Top 10 best verkochte schoenen")
+top_schoenen = df['schoen_naam'].value_counts().nlargest(10).reset_index()
+top_schoenen.columns = ['schoen_naam', 'aantal_verkocht']
 
-# Tweede visual: Verkooplocaties op een scatterplot (voorbeeld)
-st.subheader("Visual 2: Verkooplocaties")
-if 'Latitude' in df.columns and 'Longitude' in df.columns:
-    st.map(df[['Latitude', 'Longitude']])
+fig1 = px.bar(top_schoenen, x='schoen_naam', y='aantal_verkocht', 
+              labels={'schoen_naam': 'Schoen', 'aantal_verkocht': 'Aantal verkocht'},
+              title='Top 10 best verkochte schoenen')
+st.plotly_chart(fig1)
+
+# Visual 2: Verkooplocaties op kaart
+st.subheader("Verkooplocaties")
+# Zorg dat er kolommen zijn voor latitude en longitude
+if 'latitude' in df.columns and 'longitude' in df.columns:
+    st.map(df[['latitude', 'longitude']])
 else:
-    st.warning("Kolommen 'Latitude' en 'Longitude' niet gevonden voor kaartvisualisatie.")
+    st.warning("De dataset bevat geen locatiegegevens (latitude & longitude).")
+
