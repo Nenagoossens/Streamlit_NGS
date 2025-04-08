@@ -9,7 +9,10 @@ df = pd.read_csv('exclusieve_schoenen_verkoop_met_locatie.csv')
 df['aankoopdatum'] = pd.to_datetime(df['aankoopdatum'])
 
 # Maak de tabs
-tab1, tab2 = st.tabs(["Verkopen per Maand", "Verkopen per Land"])
+tab1, tab2, tab3 = st.tabs(["Verkopen per Maand", "Verkopen per Land", "Wijzig Data"])
+
+# Titel toevoegen
+st.title("Exclusieve Schoenen Verkoop met Locatie")
 
 # Tab 1 - Verkopen per maand
 with tab1:
@@ -40,3 +43,13 @@ with tab2:
     plt.xticks(rotation=45)
     st.pyplot(plt)
 
+# Tab 3 - Wijzig Data
+with tab3:
+    st.subheader("Pas de data aan")
+    # Toon de data in een editable tabel
+    edited_df = st.experimental_data_editor(df, num_rows="dynamic")
+
+    # Optie om de gewijzigde data op te slaan
+    if st.button("Opslaan"):
+        edited_df.to_csv('exclusieve_schoenen_verkoop_met_locatie.csv', index=False)
+        st.success("Data succesvol opgeslagen!")
