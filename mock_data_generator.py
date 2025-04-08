@@ -1,5 +1,6 @@
 import streamlit as st
 import pandas as pd
+import matplotlib as mpl
 '''
 # Lees de CSV
 df = pd.read_csv('exclusieve_schoenen_verkoop_met_locatie.csv')
