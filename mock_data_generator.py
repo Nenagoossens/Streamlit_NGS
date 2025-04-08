@@ -4,7 +4,7 @@ import dash_core_components as dcc
 import dash_html_components as html
 from dash.dependencies import Input, Output
 import plotly.express as px
-
+'''
 # Lees de CSV
 df = pd.read_csv('exclusieve_schoenen_verkoop_met_locatie.csv')
 
@@ -53,3 +53,4 @@ def update_verkoop_per_land(_):
 # Run de app
 if __name__ == '__main__':
     app.run_server(debug=True)
+'''
