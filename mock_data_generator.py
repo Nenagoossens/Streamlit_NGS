@@ -1,6 +1,5 @@
-import pandas as pd
 import streamlit as st
-import plotly.express as px
+import pandas as pd
 '''
 # Lees de CSV
 df = pd.read_csv('exclusieve_schoenen_verkoop_met_locatie.csv')
